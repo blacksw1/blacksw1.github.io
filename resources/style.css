@@ -9,27 +9,56 @@
     font-family: "Roboto Mono"
 }
 
-header .header-nav-bar {
+.header-nav-bar {
   display: inline-grid;
-  grid-template-columns: 1fr 4fr;
+  grid-template-columns: 1fr 5fr 4fr;
   /* grid-template-rows: 100%; */
-  justify-items: stretch;
+  justify-content: center;
   align-items: center;
-  height: 10vh;
+  width: 100%;
+  height: fit-content;
 }
 
 .nav-logo {
-  grid-column-start: 1 / span 1;
-}
-
-.nav {
-  grid-column-start: 2 / span 1;
+  display: flex;
 }
 
 #nav-logo {
-  height: auto;
+  display: flex;
+  height: 80px;
+  flex-shrink: 1;
 }
 
-.nav-links-grid-containter {
+.nav-title {
+  display: inline;
+  font-size: 1.5vw;
+  text-align: center;
+}
+
+.nav {
   display: inline-grid;
+  grid-template-columns: 1fr;
+  width: 100%;
+  padding: 0;
+}
+
+.nav-links-grid-container {
+  display: inline-grid;
+  grid-template-columns: repeat(5, 1fr);
+  justify-content: center;
+  justify-items: center;
+  justify-self: right;
+  column-gap: 4%;
+  width: 85%;
+  list-style: none;
+  font-size: 1.3vw;
+  padding: 0;
+}
+
+.nav-links-grid-item {
+  text-align: right;
+}
+
+#title-image {
+  width: 100%;
 }
