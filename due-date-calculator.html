@@ -4,47 +4,109 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
   <link href="./resources/style.css" rel="stylesheet">
-  <title>Due Date Calculator</title>
+  <title>Due Date and Scan Schedule Calculator</title>
   <script>
-      function calculateDueDate() {
-          // Get the inputs
-          let dateString = document.getElementById('first-date-last-period').value;
-          let cycleLength = parseInt(document.getElementById('cycle-length').value);
+    function calculateDueDate() {
+      // Get the inputs
+      let dateString = document.getElementById('first-date-last-period').value;
+      let cycleLength = parseInt(document.getElementById('cycle-length').value);
 
-          // Convert the date string to a Date object
-          let lastPeriodDate = new Date(dateString);
+      // Convert the date string to a Date object
+      let lastPeriodDate = new Date(dateString);
 
-          // Check if the inputs are valid
-          if (isNaN(lastPeriodDate) || isNaN(cycleLength) || cycleLength <= 0) {
-              alert('Please enter valid inputs.');
-              return;
-          }
-
-          // Calculate the due date
-          // Normally, the due date is 280 days from the first date of the last period
-          // (40 weeks = 280 days), but we need to adjust based on cycle length.
-          let cycleAdjustment = cycleLength - 28; // Default cycle length is 28 days
-          let dueDate = new Date(lastPeriodDate);
-          dueDate.setDate(dueDate.getDate() + 280 + cycleAdjustment);
-
-          // Format the due date to a readable format (YYYY-MM-DD)
-          let formattedDueDate = dueDate.toISOString().split('T')[0];
-
-          // Display the due date
-          document.getElementById('result-due-date').textContent = 'Estimated Due Date: ' + formattedDueDate;
+      // Check if the inputs are valid
+      if (isNaN(lastPeriodDate) || isNaN(cycleLength) || cycleLength <= 0) {
+        alert('Please enter valid inputs.');
+        return;
       }
+
+      // Calculate the due date
+      let cycleAdjustment = cycleLength - 28; // Default cycle length is 28 days
+      let dueDate = new Date(lastPeriodDate);
+      dueDate.setDate(dueDate.getDate() + 280 + cycleAdjustment);
+
+      // Format the due date to a readable format (YYYY-MM-DD)
+      let formattedDueDate = dueDate.toISOString().split('T')[0];
+      document.getElementById('result-due-date').textContent = 'Estimated Due Date: ' + formattedDueDate;
+
+      // Calculate scan dates
+      calculateScanDates(lastPeriodDate);
+    }
+
+    function calculateScanDates(lastPeriodDate) {
+      // Scan date ranges
+      const scanTypes = {
+        'early-reassurance': [6, 14],
+        'reassurance': [15, 23],
+        'sneakpeek-gender': [6, 40], // Assuming it can be done any time after 6 weeks
+        'gender-scan': [14, 40], // Assuming it can be done any time after 14 weeks
+        'anomaly-scan': [18, 23],
+        '4d-scan': [24, 32],
+        'growth-presentation': [28, 40],
+        'panorama-test': [9, 40] // Assuming it can be done any time after 9 weeks
+      };
+
+      // Get selected scan types
+      let selectedScans = document.querySelectorAll('input[name="scan-type"]:checked');
+
+      let results = '';
+      selectedScans.forEach(scan => {
+        let [startWeek, endWeek] = scanTypes[scan.value];
+        let startDate = new Date(lastPeriodDate);
+        let endDate = new Date(lastPeriodDate);
+        startDate.setDate(startDate.getDate() + startWeek * 7);
+        endDate.setDate(endDate.getDate() + endWeek * 7);
+
+        let formattedStartDate = startDate.toISOString().split('T')[0];
+        let formattedEndDate = endDate.toISOString().split('T')[0];
+
+        // Get the label text for the scan
+        let labelText = document.querySelector(`label[for="${scan.id}"]`).textContent;
+
+        results += `<p>${labelText}: ${formattedStartDate} to ${formattedEndDate}</p>`;
+      });
+
+      document.getElementById('result-scan-dates').innerHTML = results;
+    }
   </script>
 </head>
 <body>
-    <h1>Due Date Calculator</h1>
-    <label for="first-date-last-period">First Date of Last Period (YYYY-MM-DD):</label>
-    <input type="date" id="first-date-last-period"><br><br>
-    
-    <label for="cycle-length">Typical Cycle Length (days):</label>
-    <input type="number" id="cycle-length" value="28"><br><br>
-    
-    <button onclick="calculateDueDate()">Calculate Due Date</button>
+  <h1>Due Date and Scan Schedule Calculator</h1>
+  <label for="first-date-last-period">First Date of Last Period (YYYY-MM-DD):</label>
+  <input type="date" id="first-date-last-period"><br><br>
+  
+  <label for="cycle-length">Typical Cycle Length (days):</label>
+  <input type="number" id="cycle-length" value="28"><br><br>
 
-    <p id="result-due-date"></p>
+  <label>Select Scan Types:</label><br>
+  <input type="checkbox" id="early-reassurance" name="scan-type" value="early-reassurance">
+  <label for="early-reassurance">Early Reassurance (6 to 14 Weeks)</label><br>
+
+  <input type="checkbox" id="reassurance" name="scan-type" value="reassurance">
+  <label for="reassurance">Reassurance (15-23 Weeks)</label><br>
+
+  <input type="checkbox" id="sneakpeek-gender" name="scan-type" value="sneakpeek-gender">
+  <label for="sneakpeek-gender">SneakPeek Gender Blood Test (6+ Weeks)</label><br>
+
+  <input type="checkbox" id="gender-scan" name="scan-type" value="gender-scan">
+  <label for="gender-scan">Gender Scan (14+ Weeks)</label><br>
+
+  <input type="checkbox" id="anomaly-scan" name="scan-type" value="anomaly-scan">
+  <label for="anomaly-scan">Anomaly Scan (18 to 23 Weeks)</label><br>
+
+  <input type="checkbox" id="4d-scan" name="scan-type" value="4d-scan">
+  <label for="4d-scan">4D Scan (24 to 32 Weeks)</label><br>
+
+  <input type="checkbox" id="growth-presentation" name="scan-type" value="growth-presentation">
+  <label for="growth-presentation">Growth & Presentation Scan (28 to 40 Weeks)</label><br>
+
+  <input type="checkbox" id="panorama-test" name="scan-type" value="panorama-test">
+  <label for="panorama-test">Panorama Test (9+ Weeks)</label><br><br>
+  
+  <button onclick="calculateDueDate()">Calculate Due Date and Scan Schedule</button>
+
+  <h2>Results</h2>
+  <p id="result-due-date"></p>
+  <div id="result-scan-dates"></div>
 </body>
 </html>
