@@ -1,10 +1,110 @@
 <!DOCTYPE html>
 <head>
+  <title>Due Date and Scan Schedule Calculator</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
-  <link href="./resources/style.css" rel="stylesheet">
-  <title>Due Date and Scan Schedule Calculator</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;700&display=swap">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #F1E8E2;
+      color: #634A33;
+      margin: 0;
+      padding: 20px;
+      box-sizing: border-box;
+      text-align: center;
+    }
+
+    h1 {
+      color: #A28269;
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+
+    input[type="date"],
+    input[type="number"],
+    button {
+      display: block;
+      padding: 10px;
+      margin: 0 auto 20px;
+      border: 1px solid #D2BEB1;
+      border-radius: 5px;
+      font-size: 16px;
+      box-sizing: border-box;
+    }
+
+    input[type="date"] {
+      background-color: #FFFFFF;
+      color: #634A33;
+      width: 200px;
+    }
+
+    input[type="number"] {
+      background-color: #FFFFFF;
+      color: #634A33;
+      width: 100px;
+    }
+
+    .checkbox-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 10px;
+    }
+
+    input[type="checkbox"] {
+      margin-right: 10px;
+    }
+
+    button {
+      background-color: #A28269;
+      color: #FFFFFF;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      width: 200px;
+    }
+
+    button:hover {
+      background-color: #634A33;
+    }
+
+    #result-due-date,
+    #result-scan-dates {
+      background-color: #FFFFFF;
+      padding: 20px;
+      border-radius: 5px;
+      border: 1px solid #D2BEB1;
+      margin-top: 20px;
+      display: none;
+      text-align: center;
+    }
+
+    @media (min-width: 768px) {
+      input[type="date"],
+      input[type="number"],
+      button {
+        width: auto;
+      }
+
+      h1 {
+        font-size: 2em;
+      }
+    }
+
+    @media (max-width: 767px) {
+      input[type="date"],
+      input[type="number"],
+      button {
+        width: 100%;
+      }
+    }
+  </style>
   <script>
     function calculateDueDate() {
       // Get the inputs
@@ -28,6 +128,10 @@
       // Format the due date to a readable format (YYYY-MM-DD)
       let formattedDueDate = dueDate.toISOString().split('T')[0];
       document.getElementById('result-due-date').textContent = 'Estimated Due Date: ' + formattedDueDate;
+
+      // Show the result
+      document.getElementById('result-due-date').style.display = 'block';
+      document.getElementById('results-header').style.display = 'block';
 
       // Calculate scan dates
       calculateScanDates(lastPeriodDate);
@@ -67,45 +171,57 @@
       });
 
       document.getElementById('result-scan-dates').innerHTML = results;
+
+      // Show the results
+      document.getElementById('result-scan-dates').style.display = 'block';
     }
   </script>
 </head>
 <body>
   <h1>Due Date and Scan Schedule Calculator</h1>
-  <label for="first-date-last-period">First Date of Last Period (YYYY-MM-DD):</label>
+  <label for="first-date-last-period" class="center-text">First Date of Last Period (YYYY-MM-DD):</label>
   <input type="date" id="first-date-last-period"><br><br>
   
-  <label for="cycle-length">Typical Cycle Length (days):</label>
+  <label for="cycle-length" class="center-text">Typical Cycle Length (days):</label>
   <input type="number" id="cycle-length" value="28"><br><br>
 
-  <label>Select Scan Types:</label><br>
-  <input type="checkbox" id="early-reassurance" name="scan-type" value="early-reassurance">
-  <label for="early-reassurance">Early Reassurance (6 to 14 Weeks)</label><br>
-
-  <input type="checkbox" id="reassurance" name="scan-type" value="reassurance">
-  <label for="reassurance">Reassurance (15-23 Weeks)</label><br>
-
-  <input type="checkbox" id="sneakpeek-gender" name="scan-type" value="sneakpeek-gender">
-  <label for="sneakpeek-gender">SneakPeek Gender Blood Test (6+ Weeks)</label><br>
-
-  <input type="checkbox" id="gender-scan" name="scan-type" value="gender-scan">
-  <label for="gender-scan">Gender Scan (14+ Weeks)</label><br>
-
-  <input type="checkbox" id="anomaly-scan" name="scan-type" value="anomaly-scan">
-  <label for="anomaly-scan">Anomaly Scan (18 to 23 Weeks)</label><br>
-
-  <input type="checkbox" id="4d-scan" name="scan-type" value="4d-scan">
-  <label for="4d-scan">4D Scan (24 to 32 Weeks)</label><br>
-
-  <input type="checkbox" id="growth-presentation" name="scan-type" value="growth-presentation">
-  <label for="growth-presentation">Growth & Presentation Scan (28 to 40 Weeks)</label><br>
-
-  <input type="checkbox" id="panorama-test" name="scan-type" value="panorama-test">
-  <label for="panorama-test">Panorama Test (9+ Weeks)</label><br><br>
+  <label class="center-text">Select Scan Types:</label><br>
+  <div class="checkbox-container">
+    <input type="checkbox" id="early-reassurance" name="scan-type" value="early-reassurance">
+    <label for="early-reassurance">Early Reassurance (6 to 14 Weeks)</label>
+  </div>
+  <div class="checkbox-container">
+    <input type="checkbox" id="reassurance" name="scan-type" value="reassurance">
+    <label for="reassurance">Reassurance (15-23 Weeks)</label>
+  </div>
+  <div class="checkbox-container">
+    <input type="checkbox" id="sneakpeek-gender" name="scan-type" value="sneakpeek-gender">
+    <label for="sneakpeek-gender">SneakPeek Gender Blood Test (6+ Weeks)</label>
+  </div>
+  <div class="checkbox-container">
+    <input type="checkbox" id="gender-scan" name="scan-type" value="gender-scan">
+    <label for="gender-scan">Gender Scan (14+ Weeks)</label>
+  </div>
+  <div class="checkbox-container">
+    <input type="checkbox" id="anomaly-scan" name="scan-type" value="anomaly-scan">
+    <label for="anomaly-scan">Anomaly Scan (18 to 23 Weeks)</label>
+  </div>
+  <div class="checkbox-container">
+    <input type="checkbox" id="4d-scan" name="scan-type" value="4d-scan">
+    <label for="4d-scan">4D Scan (24 to 32 Weeks)</label>
+  </div>
+  <div class="checkbox-container">
+    <input type="checkbox" id="growth-presentation" name="scan-type" value="growth-presentation">
+    <label for="growth-presentation">Growth & Presentation Scan (28 to 40 Weeks)</label>
+  </div>
+  <div class="checkbox-container">
+    <input type="checkbox" id="panorama-test" name="scan-type" value="panorama-test">
+    <label for="panorama-test">Panorama Test (9+ Weeks)</label>
+  </div>
   
   <button onclick="calculateDueDate()">Calculate Due Date and Scan Schedule</button>
 
-  <h2>Results</h2>
+  <h2 id="results-header" style="display: none;">Results</h2>
   <p id="result-due-date"></p>
   <div id="result-scan-dates"></div>
 </body>
