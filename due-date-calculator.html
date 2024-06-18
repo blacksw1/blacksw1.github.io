@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <head>
   <title>Due Date and Scan Schedule Calculator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;700&display=swap">
@@ -13,17 +14,21 @@
       padding: 20px;
       box-sizing: border-box;
       text-align: center;
+      font-size: 1.2em; /* Base font size for body */
     }
 
     h1 {
       color: #A28269;
       margin-bottom: 20px;
+      font-size: 2em; /* Larger font size for headings */
     }
 
     label {
       display: block;
       margin-bottom: 10px;
       font-weight: bold;
+      font-size: 1.1em; /* Slightly larger font size for labels */
+      text-align: center; /* Center align labels */
     }
 
     input[type="date"],
@@ -34,20 +39,10 @@
       margin: 0 auto 20px;
       border: 1px solid #D2BEB1;
       border-radius: 5px;
-      font-size: 16px;
+      font-size: 1.1em; /* Larger font size for inputs and buttons */
       box-sizing: border-box;
-    }
-
-    input[type="date"] {
-      background-color: #FFFFFF;
-      color: #634A33;
-      width: 200px;
-    }
-
-    input[type="number"] {
-      background-color: #FFFFFF;
-      color: #634A33;
-      width: 100px;
+      width: 100%; /* Full width for mobile */
+      max-width: 300px; /* Limit width for larger screens */
     }
 
     .checkbox-container {
@@ -57,8 +52,13 @@
       margin-bottom: 10px;
     }
 
-    input[type="checkbox"] {
+    .checkbox-container input[type="checkbox"] {
       margin-right: 10px;
+      transform: scale(1.2);
+    }
+
+    .checkbox-container label {
+      margin: 0; /* Remove margin to vertically center align text */
     }
 
     button {
@@ -67,41 +67,67 @@
       border: none;
       cursor: pointer;
       transition: background-color 0.3s ease;
-      width: 200px;
     }
 
     button:hover {
       background-color: #634A33;
     }
 
-    #result-due-date,
-    #result-scan-dates {
+    .result-box {
       background-color: #FFFFFF;
       padding: 20px;
       border-radius: 5px;
       border: 1px solid #D2BEB1;
       margin-top: 20px;
-      display: none;
       text-align: center;
+      display: none;
     }
 
     @media (min-width: 768px) {
-      input[type="date"],
-      input[type="number"],
-      button {
-        width: auto;
+      body {
+        font-size: 1em; /* Original font size for larger screens */
       }
 
       h1 {
-        font-size: 2em;
+        font-size: 2em; /* Original font size for headings */
+      }
+
+      label {
+        font-size: 1em; /* Original font size for labels */
+      }
+
+      input[type="date"],
+      input[type="number"],
+      button {
+        font-size: 1em; /* Original font size for inputs and buttons */
+      }
+
+      .checkbox-container label {
+        font-size: 1em; /* Original font size for checkbox labels */
       }
     }
 
     @media (max-width: 767px) {
+      body {
+        font-size: 1.2em; /* Larger font size for smaller screens */
+      }
+
+      h1 {
+        font-size: 1.5em; /* Larger font size for headings */
+      }
+
+      label {
+        font-size: 1.1em; /* Slightly larger font size for labels */
+      }
+
       input[type="date"],
       input[type="number"],
       button {
-        width: 100%;
+        font-size: 1.1em; /* Larger font size for inputs and buttons */
+      }
+
+      .checkbox-container label {
+        font-size: 1.1em; /* Slightly larger font size for checkbox labels */
       }
     }
   </style>
@@ -110,6 +136,8 @@
       // Get the inputs
       let dateString = document.getElementById('first-date-last-period').value;
       let cycleLength = parseInt(document.getElementById('cycle-length').value);
+      let weeksInput = document.getElementById('weeks-input').value;
+      let futureDate = document.getElementById('weeks-date-input').value;
 
       // Convert the date string to a Date object
       let lastPeriodDate = new Date(dateString);
@@ -127,7 +155,7 @@
 
       // Format the due date to a readable format (YYYY-MM-DD)
       let formattedDueDate = dueDate.toISOString().split('T')[0];
-      document.getElementById('result-due-date').textContent = 'Estimated Due Date: ' + formattedDueDate;
+      document.getElementById('result-due-date').innerHTML = '<strong>Estimated Due Date:</strong><br>' + formattedDueDate;
 
       // Show the result
       document.getElementById('result-due-date').style.display = 'block';
@@ -135,6 +163,19 @@
 
       // Calculate scan dates
       calculateScanDates(lastPeriodDate);
+
+      // Calculate the date for the specified number of weeks
+      if (weeksInput && !isNaN(weeksInput) && weeksInput > 0) {
+        calculateWeeksDate(lastPeriodDate, weeksInput);
+      }
+
+      // Calculate the weeks on the future date
+      if (futureDate) {
+        calculateWeeksOnDate(lastPeriodDate, futureDate);
+      }
+
+      // Calculate weeks on today's date
+      calculateWeeksToday(lastPeriodDate);
     }
 
     function calculateScanDates(lastPeriodDate) {
@@ -167,7 +208,7 @@
         // Get the label text for the scan
         let labelText = document.querySelector(`label[for="${scan.id}"]`).textContent;
 
-        results += `<p>${labelText}: ${formattedStartDate} to ${formattedEndDate}</p>`;
+        results += `<p><strong>${labelText}:</strong><br>${formattedStartDate} to ${formattedEndDate}</p>`;
       });
 
       document.getElementById('result-scan-dates').innerHTML = results;
@@ -175,17 +216,68 @@
       // Show the results
       document.getElementById('result-scan-dates').style.display = 'block';
     }
+
+    function calculateWeeksDate(lastPeriodDate, weeks) {
+      // Calculate the date for the specified number of weeks
+      let weeksDate = new Date(lastPeriodDate);
+      weeksDate.setDate(weeksDate.getDate() + weeks * 7);
+
+      // Format the weeks date to a readable format (YYYY-MM-DD)
+      let formattedWeeksDate = weeksDate.toISOString().split('T')[0];
+      document.getElementById('result-weeks-date').innerHTML = `<strong>Date at ${weeks} Weeks:</strong><br>${formattedWeeksDate}`;
+
+      // Show the result
+      document.getElementById('result-weeks-date').style.display = 'block';
+    }
+
+    function calculateWeeksOnDate(lastPeriodDate, futureDate) {
+      // Calculate the number of weeks on the future date
+      let futureDateObj = new Date(futureDate);
+
+      if (futureDateObj < lastPeriodDate) {
+        alert('Please enter a future date.');
+        return;
+      }
+
+      let diffTime = Math.abs(futureDateObj - lastPeriodDate);
+      let diffWeeks = Math.floor(diffTime / (1000 * 60 * 60 * 24 * 7));
+      let diffDays = Math.floor((diffTime % (1000 * 60 * 60 * 24 * 7)) / (1000 * 60 * 60 * 24));
+
+      document.getElementById('result-future-weeks').innerHTML = `<strong>Weeks on ${futureDate}:</strong><br>${diffWeeks} Weeks, ${diffDays} Days`;
+
+      // Show the result
+      document.getElementById('result-future-weeks').style.display = 'block';
+    }
+
+    function calculateWeeksToday(lastPeriodDate) {
+      // Calculate the number of weeks on today's date
+      let today = new Date();
+      let diffTime = Math.abs(today - lastPeriodDate);
+      let diffWeeks = Math.floor(diffTime / (1000 * 60 * 60 * 24 * 7));
+      let diffDays = Math.floor((diffTime % (1000 * 60 * 60 * 24 * 7)) / (1000 * 60 * 60 * 24));
+
+      document.getElementById('result-today-weeks').innerHTML = `<strong>Number of weeks today:</strong><br>${diffWeeks} Weeks, ${diffDays} Days`;
+
+      // Show the result
+      document.getElementById('result-today-weeks').style.display = 'block';
+    }
   </script>
 </head>
 <body>
   <h1>Due Date and Scan Schedule Calculator</h1>
-  <label for="first-date-last-period" class="center-text">First Date of Last Period (YYYY-MM-DD):</label>
+  <label for="first-date-last-period">First Date of Last Period (YYYY-MM-DD):</label>
   <input type="date" id="first-date-last-period"><br><br>
   
-  <label for="cycle-length" class="center-text">Typical Cycle Length (days):</label>
+  <label for="cycle-length">Typical Cycle Length (days):</label>
   <input type="number" id="cycle-length" value="28"><br><br>
 
-  <label class="center-text">Select Scan Types:</label><br>
+  <label for="weeks-input">What date will it be when I am ?? weeks?</label>
+  <input type="number" id="weeks-input" placeholder="Optional"><br><br>
+
+  <label for="weeks-date-input">How many weeks will I be on ?? date?</label>
+  <input type="date" id="weeks-date-input"><br><br>
+
+  <label>Select Scan Types:</label><br>
   <div class="checkbox-container">
     <input type="checkbox" id="early-reassurance" name="scan-type" value="early-reassurance">
     <label for="early-reassurance">Early Reassurance (6 to 14 Weeks)</label>
@@ -222,7 +314,10 @@
   <button onclick="calculateDueDate()">Calculate Due Date and Scan Schedule</button>
 
   <h2 id="results-header" style="display: none;">Results</h2>
-  <p id="result-due-date"></p>
-  <div id="result-scan-dates"></div>
+  <div id="result-due-date" class="result-box"></div>
+  <div id="result-scan-dates" class="result-box"></div>
+  <div id="result-weeks-date" class="result-box"></div>
+  <div id="result-future-weeks" class="result-box"></div>
+  <div id="result-today-weeks" class="result-box"></div>
 </body>
 </html>
