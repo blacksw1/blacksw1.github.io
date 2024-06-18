@@ -256,7 +256,7 @@
       let diffWeeks = Math.floor(diffTime / (1000 * 60 * 60 * 24 * 7));
       let diffDays = Math.floor((diffTime % (1000 * 60 * 60 * 24 * 7)) / (1000 * 60 * 60 * 24));
 
-      document.getElementById('result-today-weeks').innerHTML = `<strong>Number of weeks today:</strong><br>${diffWeeks} Weeks, ${diffDays} Days`;
+      document.getElementById('result-today-weeks').innerHTML = `<strong>Today, you are:</strong><br>${diffWeeks} Weeks, ${diffDays} Days`;
 
       // Show the result
       document.getElementById('result-today-weeks').style.display = 'block';
@@ -314,10 +314,10 @@
   <button onclick="calculateDueDate()">Calculate Due Date and Scan Schedule</button>
 
   <h2 id="results-header" style="display: none;">Results</h2>
+  <div id="result-today-weeks" class="result-box"></div>
   <div id="result-due-date" class="result-box"></div>
   <div id="result-scan-dates" class="result-box"></div>
   <div id="result-weeks-date" class="result-box"></div>
   <div id="result-future-weeks" class="result-box"></div>
-  <div id="result-today-weeks" class="result-box"></div>
 </body>
 </html>
