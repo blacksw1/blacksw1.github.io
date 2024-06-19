@@ -31,12 +31,22 @@
       text-align: center; /* Center align labels */
     }
 
+    .input-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .input-container label {
+      margin-bottom: 5px;
+    }
+
     input[type="date"],
     input[type="number"],
     button {
-      display: block;
       padding: 10px;
-      margin: 0 auto 20px;
+      margin-bottom: 20px;
       border: 1px solid #D2BEB1;
       border-radius: 5px;
       font-size: 1.1em; /* Larger font size for inputs and buttons */
@@ -45,11 +55,19 @@
       max-width: 300px; /* Limit width for larger screens */
     }
 
+    .checkbox-container-wrapper {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 10px;
+    }
+
     .checkbox-container {
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-bottom: 10px;
+      width: 50%;
+      max-width: 600px; /* Widen the container */
+      text-align: left;
     }
 
     .checkbox-container input[type="checkbox"] {
@@ -59,6 +77,7 @@
 
     .checkbox-container label {
       margin: 0; /* Remove margin to vertically center align text */
+      align-self: center; /* Vertically center align text */
     }
 
     button {
@@ -81,6 +100,12 @@
       margin-top: 20px;
       text-align: center;
       display: none;
+    }
+
+    .disclaimer {
+      font-size: 0.8em;
+      color: #634A33;
+      margin-top: 20px;
     }
 
     @media (min-width: 768px) {
@@ -132,6 +157,11 @@
     }
   </style>
   <script>
+    function formatDate(date) {
+      const options = { day: 'numeric', month: 'long', year: 'numeric' };
+      return new Date(date).toLocaleDateString('en-GB', options);
+    }
+
     function calculateDueDate() {
       // Get the inputs
       let dateString = document.getElementById('first-date-last-period').value;
@@ -153,8 +183,8 @@
       let dueDate = new Date(lastPeriodDate);
       dueDate.setDate(dueDate.getDate() + 280 + cycleAdjustment);
 
-      // Format the due date to a readable format (YYYY-MM-DD)
-      let formattedDueDate = dueDate.toISOString().split('T')[0];
+      // Format the due date to a readable format (28th June 2024)
+      let formattedDueDate = formatDate(dueDate);
       document.getElementById('result-due-date').innerHTML = '<strong>Estimated Due Date:</strong><br>' + formattedDueDate;
 
       // Show the result
@@ -179,20 +209,23 @@
     }
 
     function calculateScanDates(lastPeriodDate) {
-      // Scan date ranges
       const scanTypes = {
         'early-reassurance': [6, 14],
         'reassurance': [15, 23],
-        'sneakpeek-gender': [6, 40], // Assuming it can be done any time after 6 weeks
-        'gender-scan': [14, 40], // Assuming it can be done any time after 14 weeks
+        'sneakpeek-gender': [6, 40],
+        'gender-scan': [14, 40],
         'anomaly-scan': [18, 23],
         '4d-scan': [24, 32],
         'growth-presentation': [28, 40],
-        'panorama-test': [9, 40] // Assuming it can be done any time after 9 weeks
+        'panorama-test': [9, 40]
       };
 
-      // Get selected scan types
       let selectedScans = document.querySelectorAll('input[name="scan-type"]:checked');
+      
+      if (selectedScans.length === 0) {
+        document.getElementById('result-scan-dates').style.display = 'none'; // Hide the results section
+        return;
+      }
 
       let results = '';
       selectedScans.forEach(scan => {
@@ -202,19 +235,15 @@
         startDate.setDate(startDate.getDate() + startWeek * 7);
         endDate.setDate(endDate.getDate() + endWeek * 7);
 
-        let formattedStartDate = startDate.toISOString().split('T')[0];
-        let formattedEndDate = endDate.toISOString().split('T')[0];
+        let formattedStartDate = formatDate(startDate);
+        let formattedEndDate = formatDate(endDate);
 
-        // Get the label text for the scan
         let labelText = document.querySelector(`label[for="${scan.id}"]`).textContent;
-
         results += `<p><strong>${labelText}:</strong><br>${formattedStartDate} to ${formattedEndDate}</p>`;
       });
 
       document.getElementById('result-scan-dates').innerHTML = results;
-
-      // Show the results
-      document.getElementById('result-scan-dates').style.display = 'block';
+      document.getElementById('result-scan-dates').style.display = 'block'; // Show the results section
     }
 
     function calculateWeeksDate(lastPeriodDate, weeks) {
@@ -222,8 +251,8 @@
       let weeksDate = new Date(lastPeriodDate);
       weeksDate.setDate(weeksDate.getDate() + weeks * 7);
 
-      // Format the weeks date to a readable format (YYYY-MM-DD)
-      let formattedWeeksDate = weeksDate.toISOString().split('T')[0];
+      // Format the weeks date to a readable format (28th June 2024)
+      let formattedWeeksDate = formatDate(weeksDate);
       document.getElementById('result-weeks-date').innerHTML = `<strong>Date at ${weeks} Weeks:</strong><br>${formattedWeeksDate}`;
 
       // Show the result
@@ -243,7 +272,7 @@
       let diffWeeks = Math.floor(diffTime / (1000 * 60 * 60 * 24 * 7));
       let diffDays = Math.floor((diffTime % (1000 * 60 * 60 * 24 * 7)) / (1000 * 60 * 60 * 24));
 
-      document.getElementById('result-future-weeks').innerHTML = `<strong>Weeks on ${futureDate}:</strong><br>${diffWeeks} Weeks, ${diffDays} Days`;
+      document.getElementById('result-future-weeks').innerHTML = `<strong>Weeks on ${formatDate(futureDate)}:</strong><br>${diffWeeks} Weeks, ${diffDays} Days`;
 
       // Show the result
       document.getElementById('result-future-weeks').style.display = 'block';
@@ -265,52 +294,79 @@
 </head>
 <body>
   <h1>Due Date and Scan Schedule Calculator</h1>
-  <label for="first-date-last-period">First Date of Last Period:</label>
-  <input type="date" id="first-date-last-period"><br>
   
-  <label for="cycle-length">Typical Cycle Length (days):</label>
-  <input type="number" id="cycle-length" value="28"><br>
+  <div class="input-container">
+    <label for="first-date-last-period">First Date of Last Period:</label>
+    <input type="date" id="first-date-last-period">
+  </div>
 
-  <label for="weeks-input">What date will it be when I am ?? weeks?</label>
-  <input type="number" id="weeks-input" placeholder="Optional"><br>
+  <div class="input-container">
+    <label for="cycle-length">Typical Cycle Length (days):</label>
+    <input type="number" id="cycle-length" value="28">
+  </div>
 
-  <label for="weeks-date-input">How many weeks will I be on ?? date?</label>
-  <input type="date" id="weeks-date-input"><br>
+  <div class="input-container">
+    <label for="weeks-input">(Optional) What date will it be when I am _ weeks?</label>
+    <input type="number" id="weeks-input" placeholder="Number of weeks">
+  </div>
+
+  <div class="input-container">
+    <label for="weeks-date-input">(Optional) How many weeks will I be on _ date?</label>
+    <input type="date" id="weeks-date-input" placeholder="Future date">
+  </div>
+
+  <br> <!-- Line break between the last optional question and the scan types -->
 
   <label>Select Scan Types:</label><br>
-  <div class="checkbox-container">
-    <input type="checkbox" id="early-reassurance" name="scan-type" value="early-reassurance">
-    <label for="early-reassurance">Early Reassurance (6 to 14 Weeks)</label>
+  <div class="checkbox-container-wrapper">
+    <div class="checkbox-container">
+      <input type="checkbox" id="early-reassurance" name="scan-type" value="early-reassurance">
+      <label for="early-reassurance">Early Reassurance (6 to 14 Weeks)</label>
+    </div>
   </div>
-  <div class="checkbox-container">
-    <input type="checkbox" id="reassurance" name="scan-type" value="reassurance">
-    <label for="reassurance">Reassurance (15-23 Weeks)</label>
+  <div class="checkbox-container-wrapper">
+    <div class="checkbox-container">
+      <input type="checkbox" id="reassurance" name="scan-type" value="reassurance">
+      <label for="reassurance">Reassurance (15-23 Weeks)</label>
+    </div>
   </div>
-  <div class="checkbox-container">
-    <input type="checkbox" id="sneakpeek-gender" name="scan-type" value="sneakpeek-gender">
-    <label for="sneakpeek-gender">SneakPeek Gender Blood Test (6+ Weeks)</label>
+  <div class="checkbox-container-wrapper">
+    <div class="checkbox-container">
+      <input type="checkbox" id="sneakpeek-gender" name="scan-type" value="sneakpeek-gender">
+      <label for="sneakpeek-gender">SneakPeek Gender Blood Test (6+ Weeks)</label>
+    </div>
   </div>
-  <div class="checkbox-container">
-    <input type="checkbox" id="gender-scan" name="scan-type" value="gender-scan">
-    <label for="gender-scan">Gender Scan (14+ Weeks)</label>
+  <div class="checkbox-container-wrapper">
+    <div class="checkbox-container">
+      <input type="checkbox" id="gender-scan" name="scan-type" value="gender-scan">
+      <label for="gender-scan">Gender Scan (14+ Weeks)</label>
+    </div>
   </div>
-  <div class="checkbox-container">
-    <input type="checkbox" id="anomaly-scan" name="scan-type" value="anomaly-scan">
-    <label for="anomaly-scan">Anomaly Scan (18 to 23 Weeks)</label>
+  <div class="checkbox-container-wrapper">
+    <div class="checkbox-container">
+      <input type="checkbox" id="anomaly-scan" name="scan-type" value="anomaly-scan">
+      <label for="anomaly-scan">Anomaly Scan (18 to 23 Weeks)</label>
+    </div>
   </div>
-  <div class="checkbox-container">
-    <input type="checkbox" id="4d-scan" name="scan-type" value="4d-scan">
-    <label for="4d-scan">4D Scan (24 to 32 Weeks)</label>
+  <div class="checkbox-container-wrapper">
+    <div class="checkbox-container">
+      <input type="checkbox" id="4d-scan" name="scan-type" value="4d-scan">
+      <label for="4d-scan">4D Scan (24 to 32 Weeks)</label>
+    </div>
   </div>
-  <div class="checkbox-container">
-    <input type="checkbox" id="growth-presentation" name="scan-type" value="growth-presentation">
-    <label for="growth-presentation">Growth & Presentation Scan (28 to 40 Weeks)</label>
+  <div class="checkbox-container-wrapper">
+    <div class="checkbox-container">
+      <input type="checkbox" id="growth-presentation" name="scan-type" value="growth-presentation">
+      <label for="growth-presentation">Growth & Presentation Scan (28 to 40 Weeks)</label>
+    </div>
   </div>
-  <div class="checkbox-container">
-    <input type="checkbox" id="panorama-test" name="scan-type" value="panorama-test">
-    <label for="panorama-test">Panorama Test (9+ Weeks)</label>
+  <div class="checkbox-container-wrapper">
+    <div class="checkbox-container">
+      <input type="checkbox" id="panorama-test" name="scan-type" value="panorama-test">
+      <label for="panorama-test">Panorama Test (9+ Weeks)</label>
+    </div>
   </div>
-  
+  <br>
   <button onclick="calculateDueDate()">Calculate Due Date and Scan Schedule</button>
 
   <h2 id="results-header" style="display: none;">Results</h2>
@@ -319,5 +375,8 @@
   <div id="result-scan-dates" class="result-box"></div>
   <div id="result-weeks-date" class="result-box"></div>
   <div id="result-future-weeks" class="result-box"></div>
+  <div class="disclaimer">
+    Please note that these results are just an estimate and aren't exact. They are primarily to help you understand the timing of your pregnancy and assist in booking scans.
+  </div>
 </body>
 </html>
