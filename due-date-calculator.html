@@ -161,136 +161,137 @@
       const options = { day: 'numeric', month: 'long', year: 'numeric' };
       return new Date(date).toLocaleDateString('en-GB', options);
     }
-
+  
     function calculateDueDate() {
       // Get the inputs
       let dateString = document.getElementById('first-date-last-period').value;
       let cycleLength = parseInt(document.getElementById('cycle-length').value);
       let weeksInput = document.getElementById('weeks-input').value;
       let futureDate = document.getElementById('weeks-date-input').value;
-
+  
       // Convert the date string to a Date object
       let lastPeriodDate = new Date(dateString);
-
+  
       // Check if the inputs are valid
       if (isNaN(lastPeriodDate) || isNaN(cycleLength) || cycleLength <= 0) {
         alert('Please enter valid inputs.');
         return;
       }
-
+  
       // Calculate the due date
       let cycleAdjustment = cycleLength - 28; // Default cycle length is 28 days
       let dueDate = new Date(lastPeriodDate);
       dueDate.setDate(dueDate.getDate() + 280 + cycleAdjustment);
-
+  
       // Format the due date to a readable format (28th June 2024)
       let formattedDueDate = formatDate(dueDate);
       document.getElementById('result-due-date').innerHTML = '<strong>Estimated Due Date:</strong><br>' + formattedDueDate;
-
+  
       // Show the result
       document.getElementById('result-due-date').style.display = 'block';
       document.getElementById('results-header').style.display = 'block';
-
+  
       // Calculate scan dates
-      calculateScanDates(lastPeriodDate);
-
+      calculateScanDates(lastPeriodDate, cycleAdjustment);
+  
       // Calculate the date for the specified number of weeks
       if (weeksInput && !isNaN(weeksInput) && weeksInput > 0) {
-        calculateWeeksDate(lastPeriodDate, weeksInput);
+        calculateWeeksDate(lastPeriodDate, weeksInput, cycleAdjustment);
       }
-
+  
       // Calculate the weeks on the future date
       if (futureDate) {
-        calculateWeeksOnDate(lastPeriodDate, futureDate);
+        calculateWeeksOnDate(lastPeriodDate, futureDate, cycleAdjustment);
       }
-
+  
       // Calculate weeks on today's date
-      calculateWeeksToday(lastPeriodDate);
+      calculateWeeksToday(lastPeriodDate, cycleAdjustment);
     }
-
-    function calculateScanDates(lastPeriodDate) {
+  
+    function calculateScanDates(lastPeriodDate, cycleAdjustment) {
+      // Scan date ranges
       const scanTypes = {
         'early-reassurance': [6, 14],
         'reassurance': [15, 23],
-        'sneakpeek-gender': [6, 40],
-        'gender-scan': [14, 40],
+        'sneakpeek-gender': [6, 40], // Assuming it can be done any time after 6 weeks
+        'gender-scan': [14, 40], // Assuming it can be done any time after 14 weeks
         'anomaly-scan': [18, 23],
         '4d-scan': [24, 32],
         'growth-presentation': [28, 40],
-        'panorama-test': [9, 40]
+        'panorama-test': [9, 40] // Assuming it can be done any time after 9 weeks
       };
-
+  
       let selectedScans = document.querySelectorAll('input[name="scan-type"]:checked');
       
       if (selectedScans.length === 0) {
         document.getElementById('result-scan-dates').style.display = 'none'; // Hide the results section
         return;
       }
-
+  
       let results = '';
       selectedScans.forEach(scan => {
         let [startWeek, endWeek] = scanTypes[scan.value];
         let startDate = new Date(lastPeriodDate);
         let endDate = new Date(lastPeriodDate);
-        startDate.setDate(startDate.getDate() + startWeek * 7);
-        endDate.setDate(endDate.getDate() + endWeek * 7);
-
+        startDate.setDate(startDate.getDate() + (startWeek * 7) + cycleAdjustment);
+        endDate.setDate(endDate.getDate() + (endWeek * 7) + cycleAdjustment);
+  
         let formattedStartDate = formatDate(startDate);
         let formattedEndDate = formatDate(endDate);
-
+  
         let labelText = document.querySelector(`label[for="${scan.id}"]`).textContent;
         results += `<p><strong>${labelText}:</strong><br>${formattedStartDate} to ${formattedEndDate}</p>`;
       });
-
+  
       document.getElementById('result-scan-dates').innerHTML = results;
       document.getElementById('result-scan-dates').style.display = 'block'; // Show the results section
     }
-
-    function calculateWeeksDate(lastPeriodDate, weeks) {
+  
+    function calculateWeeksDate(lastPeriodDate, weeks, cycleAdjustment) {
       // Calculate the date for the specified number of weeks
       let weeksDate = new Date(lastPeriodDate);
-      weeksDate.setDate(weeksDate.getDate() + weeks * 7);
-
+      weeksDate.setDate(weeksDate.getDate() + (weeks * 7) + cycleAdjustment);
+  
       // Format the weeks date to a readable format (28th June 2024)
       let formattedWeeksDate = formatDate(weeksDate);
       document.getElementById('result-weeks-date').innerHTML = `<strong>Date at ${weeks} Weeks:</strong><br>${formattedWeeksDate}`;
-
+  
       // Show the result
       document.getElementById('result-weeks-date').style.display = 'block';
     }
-
-    function calculateWeeksOnDate(lastPeriodDate, futureDate) {
+  
+    function calculateWeeksOnDate(lastPeriodDate, futureDate, cycleAdjustment) {
       // Calculate the number of weeks on the future date
       let futureDateObj = new Date(futureDate);
-
+  
       if (futureDateObj < lastPeriodDate) {
         alert('Please enter a future date.');
         return;
       }
-
-      let diffTime = Math.abs(futureDateObj - lastPeriodDate);
+  
+      let diffTime = Math.abs(futureDateObj - lastPeriodDate) - (cycleAdjustment * 24 * 60 * 60 * 1000);
       let diffWeeks = Math.floor(diffTime / (1000 * 60 * 60 * 24 * 7));
       let diffDays = Math.floor((diffTime % (1000 * 60 * 60 * 24 * 7)) / (1000 * 60 * 60 * 24));
-
+  
       document.getElementById('result-future-weeks').innerHTML = `<strong>Weeks on ${formatDate(futureDate)}:</strong><br>${diffWeeks} Weeks, ${diffDays} Days`;
-
+  
       // Show the result
       document.getElementById('result-future-weeks').style.display = 'block';
     }
-
-    function calculateWeeksToday(lastPeriodDate) {
+  
+    function calculateWeeksToday(lastPeriodDate, cycleAdjustment) {
       // Calculate the number of weeks on today's date
       let today = new Date();
-      let diffTime = Math.abs(today - lastPeriodDate);
+      let diffTime = Math.abs(today - lastPeriodDate) - (cycleAdjustment * 24 * 60 * 60 * 1000);
       let diffWeeks = Math.floor(diffTime / (1000 * 60 * 60 * 24 * 7));
       let diffDays = Math.floor((diffTime % (1000 * 60 * 60 * 24 * 7)) / (1000 * 60 * 60 * 24));
-
+  
       document.getElementById('result-today-weeks').innerHTML = `<strong>Today, you are:</strong><br>${diffWeeks} Weeks, ${diffDays} Days`;
-
+  
       // Show the result
       document.getElementById('result-today-weeks').style.display = 'block';
     }
-  </script>
+  </script>  
 </head>
 <body>
   <h1>Due Date and Scan Schedule Calculator</h1>
