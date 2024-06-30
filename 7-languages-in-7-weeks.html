@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>7 Languages in 7 Weeks - Notes</title>
+  </head>
+  <body> 
+    <h1>Ruby</h1>
+    <h2>Day 1 Self Study</h2>
+    <h3>Find</h3>
+    <ul>
+      <li><a href="https://github.com/rubyapi/rubyapi">The Ruby API</a></li>
+      <li><a href="https://github.com/maniramakumar/the-best-ruby-books/blob/master/books/Programming%20Ruby%201.9%20%26%202.0%20-%20The%20Pragmatic%20Programmers'%20Guide%20-%20Fourth%20Edition.pdf">Free online version of Programming Ruby: The Pragmatic Programmer's Guide</a></li>
+      <li>A method that substitutes part of a string - .sub</li>
+      <li><a href="https://www.rubyguides.com/2015/06/ruby-regex/">Guide to Ruby's regular expressions</a> - in between slashes, eg. /regex/</li>
+      <li><a href="https://www.rubyguides.com/2016/06/ruby-ranges-how-do-they-work/#:~:text=What%20is%20a%20Range%20in,range%20between%20these%20two%20values.">Guide to Ruby's ranges</a> - eg. (1..20) - parentheses not necessary</li>
+    </ul>
+    <h3>Ruby Random Number Guessing Game</h3>
+    <code>puts "Time to play the random number guessing game! Enter e for easy, h for hard, d for difficult or i for impossible!"
+
+      x = gets.chomp.to_str
+      
+      case x
+      when "e"
+          puts "Easy mode. Guess a number from 0 to 9."
+          upper_limit = 9
+      when "h"
+          puts "Hard mode. Guess a number from 0 to 99."
+          upper_limit = 99
+      when "d"
+          puts "Difficult mode. Guess a number from 0 to 999."
+          upper_limit = 999
+      when "i"
+          puts "Impossible mode. Guess a number from 0 to 9999."
+          upper_limit = 9999
+      else 
+          puts "Incorrect difficulty entered - please enter e, h, d or i. Press enter to restart the game."
+          gets
+          load 'random-number-game.rb'
+      end
+      
+      secret_num = rand(upper_limit)
+      guess = nil
+      guess_count = 0
+      guess_limit = 20
+      out_of_guesses = false
+      
+      while guess != secret_num and !out_of_guesses
+          if guess_count < guess_limit
+              puts "Enter your guess"
+              guess = gets.chomp.to_i
+              guess_count += 1;
+              if guess < secret_num
+                  puts "Higher!"
+              elsif guess > secret_num
+                  puts "Lower!"
+              end
+          else
+              out_of_guesses = true
+              break
+          end
+      end
+      
+      if out_of_guesses
+        puts "You lose!"
+        puts "You have reached the maximum number of guesses."
+        puts "The secret number was #{secret_num}"
+      else
+        puts "Congratulations! You won!"
+        puts "You guessed the secret number #{secret_num} and you did it in #{guess_count} guesses."
+        puts "Hit enter to play again."
+        gets
+        load 'random-number-game.rb'
+      end</code>
+  </body>
+</html>
