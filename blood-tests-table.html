@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blood Test Selection</title>
+    <style>
+        /* Basic styling */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            background-color: #FFFFFF;
+            color: #634A33;
+        }
+        .container {
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: #F1E8E2;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #634A33;
+        }
+        .filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .filters label {
+            background-color: #D2BEB1;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .filters input[type="checkbox"] {
+            margin-right: 5px;
+        }
+        .search-bar {
+            margin-bottom: 20px;
+        }
+        .search-bar input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #A28269;
+            border-radius: 4px;
+            background-color: #FFFFFF;
+            color: #634A33;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            background-color: #FFFFFF;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #D2BEB1;
+        }
+        th {
+            background-color: #A28269;
+            color: #FFFFFF;
+            cursor: pointer;
+        }
+        tr:hover {
+            background-color: #F1E8E2;
+        }
+        .details {
+            display: none;
+            padding: 10px;
+            background-color: #FFFFFF;
+            border-left: 4px solid #A28269;
+        }
+        .show {
+            display: table-row;
+        }
+        a {
+            color: #634A33;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Blood Test Selection</h1>
+        <div class="filters">
+            <label><input type="checkbox" value="General Health/Biochemistry"> General Health/Biochemistry</label>
+            <label><input type="checkbox" value="Female Hormones"> Female Hormones</label>
+            <label><input type="checkbox" value="Men's Health"> Men's Health</label>
+            <label><input type="checkbox" value="Female Fertility"> Female Fertility</label>
+            <label><input type="checkbox" value="Sexual Health"> Sexual Health</label>
+            <label><input type="checkbox" value="Pregnancy"> Pregnancy</label>
+        </div>
+        <div class="search-bar">
+            <input type="text" id="search" placeholder="Search for specific markers...">
+        </div>
+        <table id="bloodTestsTable">
+            <thead>
+                <tr>
+                    <th onclick="sortTable(0)">Test Name</th>
+                    <th onclick="sortTable(1)">Category</th>
+                    <th>Male</th>
+                    <th>Female</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Blood Test Entries -->
+                <tr class="test-row">
+                    <td><a href="javascript:void(0);">Diet & Lifestyle Advanced Blood Test</a></td>
+                    <td>General Health/Biochemistry</td>
+                    <td>Y</td>
+                    <td>Y</td>
+                </tr>
+                <tr class="details">
+                    <td colspan="4">Comprehensive test covering kidney, liver, pancreas, diabetes, gout risk, vitamins, minerals, omega fatty acids, and adrenal hormones. Helps identify overall health status and potential lifestyle adjustments.</td>
+                </tr>
+                <tr class="test-row">
+                    <td><a href="javascript:void(0);">Ultimate Performance Blood Test</a></td>
+                    <td>General Health/Biochemistry</td>
+                    <td>Y</td>
+                    <td>Y</td>
+                </tr>
+                <tr class="details">
+                    <td colspan="4">Aimed at athletes, this test evaluates key biomarkers that affect performance, recovery, and overall fitness levels. Includes checks for muscle damage, inflammation, and more.</td>
+                </tr>
+                <tr class="test-row">
+                    <td><a href="javascript:void(0);">Ultimate General Health Profile</a></td>
+                    <td>General Health/Biochemistry</td>
+                    <td>Y</td>
+                    <td>Y</td>
+                </tr>
+                <tr class="details">
+                    <td colspan="4">Extensive health check covering various essential biomarkers to assess general health and identify potential underlying health issues.</td>
+                </tr>
+                <tr class="test-row">
+                    <td><a href="javascript:void(0);">Well Woman Blood Test (16 Biomarkers)</a></td>
+                    <td>Female Hormones</td>
+                    <td></td>
+                    <td>Y</td>
+                </tr>
+                <tr class="details">
+                    <td colspan="4">Basic female hormone panel testing for 16 key biomarkers to assess hormonal balance and health. Useful for evaluating menstrual health and general well-being.</td>
+                </tr>
+                <tr class="test-row">
+                    <td><a href="javascript:void(0);">Advanced Well Woman Blood Test (47 Biomarkers)</a></td>
+                    <td>Female Hormones</td>
+                    <td></td>
+                    <td>Y</td>
+                </tr>
+                <tr class="details">
+                    <td colspan="4">Comprehensive female hormone panel testing for 47 biomarkers. Provides detailed insights into hormonal health, fertility, and potential endocrine disorders.</td>
+                </tr>
+                <tr class="test-row">
+                    <td><a href="javascript:void(0);">Well Man Blood Test (16 biomarkers)</a></td>
+                    <td>Men's Health</td>
+                    <td>Y</td>
+                    <td></td>
+                </tr>
+                <tr class="details">
+                    <td colspan="4">Basic male health panel testing for 16 key biomarkers to assess hormonal balance and general health. Useful for evaluating prostate health, testosterone levels, and more.</td>
+                </tr>
+                <tr class="test-row">
+                    <td><a href="javascript:void(0);">Advanced Well Man Blood Test (44 Biomarkers)</a></td>
+                    <td>Men's Health</td>
+                    <td>Y</td>
+                    <td></td>
+                </tr>
+                <tr class="details">
+                    <td colspan="4">Comprehensive male health panel testing for 44 biomarkers. Provides detailed insights into hormonal health, fertility, and potential endocrine disorders.</td>
+                </tr>
+                <tr class="test-row">
+                    <td><a href="javascript:void(0);">Anti-Mullerian Test</a></td>
+                    <td>Female Fertility</td>
+                    <td></td>
+                    <td>Y</td>
+                </tr>
+                <tr class="details">
+                    <td colspan="4">Measures Anti-Mullerian Hormone (AMH) levels, which can indicate ovarian reserve and fertility potential. Higher levels suggest more eggs, while lower levels may indicate diminished ovarian reserve.</td>
+                </tr>
+                <tr class="test-row">
+                    <td><a href="javascript:void(0);">Antenatal Health Profile</a></td>
+                    <td>Female Fertility</td>
+                    <td></td>
+                    <td>Y</td>
+                </tr>
+                <tr class="details">
+                    <td colspan="4">Comprehensive health check for pregnant women, assessing key biomarkers that can affect pregnancy and fetal health. Helps in monitoring the health of both mother and baby.</td>
+                </tr>
+                <tr class="test-row">
+                    <td><a href="javascript:void(0);">Antenatal/IVF Viral Screen</a></td>
+                    <td>Female Fertility</td>
+                    <td></td>
+                    <td>Y</td>
+                </tr>
+                <tr class="details">
+                    <td colspan="4">Screens for common viral infections that can affect pregnancy or IVF outcomes, including HIV, hepatitis, and others. Ensures a safer pregnancy and better IVF success rates.</td>
+                </tr>
+                <tr class="test-row">
+                    <td><a href="javascript:void(0);">Fertility Standard Package</a></td>
+                    <td>Female Fertility</td>
+                    <td></td>
+                    <td>Y</td>
+                </tr>
+                <tr class="details">
+                    <td colspan="4">Tests FSH, LH, and Oestradiol on Day 3 of the menstrual cycle to assess ovarian reserve and reproductive health. Helps in diagnosing fertility issues.</td>
+                </tr>
+                <tr class="test-row">
+                    <td><a href="javascript:void(0);">Progesterone: Day 21</a></td>
+                    <td>Female Fertility</td>
+                    <td></td>
+                    <td>Y</td>
+                </tr>
+                <tr class="details">
+                    <td colspan="4">Measures progesterone levels on Day 21 of the menstrual cycle to confirm ovulation and luteal phase health. Essential for fertility assessments.</td>
+                </tr>
+                <tr class="test-row">
+                    <td><a href="javascript:void(0);">Female Hormones Advanced Test</a></td>
+                    <td>Female Fertility</td>
+                    <td></td>
+                    <td>Y</td>
+                </tr>
+                <tr class="details">
+                    <td colspan="4">Comprehensive test for female hormones, including AMH. Provides insights into hormonal balance, fertility potential, and endocrine health.</td>
+                </tr>
+                <tr class="test-row">
+                    <td><a href="javascript:void(0);">HRT Profile Test</a></td>
+                    <td>Female Hormones</td>
+                    <td></td>
+                    <td>Y</td>
+                </tr>
+                <tr class="details">
+                    <td colspan="4">Monitors hormone levels for women undergoing Hormone Replacement Therapy (HRT). Helps in adjusting HRT dosages for optimal health benefits.</td>
+                </tr>
+                <tr class="test-row">
+                    <td><a href="javascript:void(0);">Menopause Profile Test</a></td>
+                    <td>Female Fertility</td>
+                    <td></td>
+                    <td>Y</td>
+                </tr>
+                <tr class="details">
+                    <td colspan="4">Evaluates hormone levels related to menopause. Helps in diagnosing menopause and managing symptoms through appropriate treatments.</td>
+                </tr>
+                <tr class="test-row">
+                    <td><a href="javascript:void(0);">Oestradiol</a></td>
+                    <td>Female Fertility</td>
+                    <td></td>
+                    <td>Y</td>
+                </tr>
+                <tr class="details">
+                    <td colspan="4">Measures oestradiol levels to assess ovarian function and overall hormonal health. Important for fertility evaluations and diagnosing menstrual disorders.</td>
+                </tr>
+                <tr class="test-row">
+                    <td><a href="javascript:void(0);">Polycystic Ovary Test Advanced</a></td>
+                    <td>Female Fertility</td>
+                    <td></td>
+                    <td>Y</td>
+                </tr>
+                <tr class="details">
+                    <td colspan="4">Comprehensive test for diagnosing Polycystic Ovary Syndrome (PCOS), including hormone levels and other biomarkers. Helps in managing and treating PCOS.</td>
+                </tr>
+                <tr class="test-row">
+                    <td><a href="javascript:void(0);">Herpes Simplex 1 & 2 Antibodies</a></td>
+                    <td>Sexual Health</td>
+                    <td>Y</td>
+                    <td>Y</td>
+                </tr>
+                <tr class="details">
+                    <td colspan="4">Detects antibodies for Herpes Simplex Virus 1 and 2. Indicates current or past infection and helps in managing symptoms and preventing transmission.</td>
+                </tr>
+                <tr class="test-row">
+                    <td><a href="javascript:void(0);">HIV, Hepatitis B and Hepatitis C</a></td>
+                    <td>Sexual Health</td>
+                    <td>Y</td>
+                    <td>Y</td>
+                </tr>
+                <tr class="details">
+                    <td colspan="4">Comprehensive screening for HIV, Hepatitis B, and Hepatitis C. Essential for sexual health and early detection of these infections.</td>
+                </tr>
+                <tr class="test-row">
+                    <td><a href="javascript:void(0);">Erectile Dysfunction Profile</a></td>
+                    <td>Men's Health</td>
+                    <td>Y</td>
+                    <td></td>
+                </tr>
+                <tr class="details">
+                    <td colspan="4">Assesses various factors that may contribute to erectile dysfunction, including hormone levels and cardiovascular health.</td>
+                </tr>
+                <tr class="test-row">
+                    <td><a href="javascript:void(0);">Testosterone</a></td>
+                    <td>Men's Health</td>
+                    <td>Y</td>
+                    <td>Y</td>
+                </tr>
+                <tr class="details">
+                    <td colspan="4">Measures testosterone levels to assess hormonal health, including potential causes of fatigue, poor libido, and other symptoms in both men and women.</td>
+                </tr>
+                <tr class="test-row">
+                    <td><a href="javascript:void(0);">Kidney Function Tests</a></td>
+                    <td>General Health/Biochemistry</td>
+                    <td>Y</td>
+                    <td>Y</td>
+                </tr>
+                <tr class="details">
+                    <td colspan="4">Evaluates kidney health by measuring key markers such as creatinine, urea, and others. Essential for diagnosing kidney function and related health issues.</td>
+                </tr>
+                <tr class="test-row">
+                    <td><a href="javascript:void(0);">Liver Function Tests</a></td>
+                    <td>General Health/Biochemistry</td>
+                    <td>Y</td>
+                    <td>Y</td>
+                </tr>
+                <tr class="details">
+                    <td colspan="4">Assesses liver health by measuring enzymes, proteins, and substances produced or processed by the liver. Important for detecting liver diseases and monitoring liver function.</td>
+                </tr>
+                <tr class="test-row">
+                    <td><a href="javascript:void(0);">Pancreas (Lipase)</a></td>
+                    <td>General Health/Biochemistry</td>
+                    <td>Y</td>
+                    <td>Y</td>
+                </tr>
+                <tr class="details">
+                    <td colspan="4">Measures lipase levels to evaluate pancreatic health and diagnose conditions such as pancreatitis.</td>
+                </tr>
+                <tr class="test-row">
+                    <td><a href="javascript:void(0);">Advanced Diabetes Blood Test</a></td>
+                    <td>General Health/Biochemistry</td>
+                    <td>Y</td>
+                    <td>Y</td>
+                </tr>
+                <tr class="details">
+                    <td colspan="4">Comprehensive test for diabetes, including HbA1c and other markers to assess blood sugar control and diabetes risk.</td>
+                </tr>
+                <tr class="test-row">
+                    <td><a href="javascript:void(0);">Thyroid Advanced Check</a></td>
+                    <td>General Health/Biochemistry</td>
+                    <td>Y</td>
+                    <td>Y</td>
+                </tr>
+                <tr class="details">
+                    <td colspan="4">Comprehensive thyroid panel to evaluate thyroid function, including TSH, T3, T4, and antibodies. Important for diagnosing thyroid disorders and managing thyroid health.</td>
+                </tr>
+                <tr class="test-row">
+                    <td><a href="javascript:void(0);">Tumour Markers General</a></td>
+                    <td>General Health/Biochemistry</td>
+                    <td>Y</td>
+                    <td>Y</td>
+                </tr>
+                <tr class="details">
+                    <td colspan="4">Measures markers like CA-125 to detect and monitor various cancers. Essential for early detection and ongoing cancer management.</td>
+                </tr>
+                <tr class="test-row">
+                    <td><a href="javascript:void(0);">Prostate (PSA) Tumour Marker</a></td>
+                    <td>General Health/Biochemistry</td>
+                    <td>Y</td>
+                    <td></td>
+                </tr>
+                <tr class="details">
+                    <td colspan="4">Measures prostate-specific antigen (PSA) levels to assess prostate health and screen for prostate cancer.</td>
+                </tr>
+                <tr class="test-row">
+                    <td><a href="javascript:void(0);">Hormone Test (Prolactin)</a></td>
+                    <td>Sexual Health</td>
+                    <td>Y</td>
+                    <td>Y</td>
+                </tr>
+                <tr class="details">
+                    <td colspan="4">Measures prolactin levels to diagnose and manage conditions related to fatigue, poor libido, erectile dysfunction, and irregular periods.</td>
+                </tr>
+                <tr class="test-row">
+                    <td><a href="javascript:void(0);">NIPT Standard</a></td>
+                    <td>Pregnancy</td>
+                    <td></td>
+                    <td>Y</td>
+                </tr>
+                <tr class="details">
+                    <td colspan="4">Non-invasive prenatal test to screen for genetic conditions in the fetus. Essential for early detection and informed pregnancy management.</td>
+                </tr>
+                <tr class="test-row">
+                    <td><a href="javascript:void(0);">NIPT Advanced</a></td>
+                    <td>Pregnancy</td>
+                    <td></td>
+                    <td>Y</td>
+                </tr>
+                <tr class="details">
+                    <td colspan="4">Advanced non-invasive prenatal test to screen for a wider range of genetic conditions in the fetus. Provides detailed insights for early detection and management.</td>
+                </tr>
+                <tr class="test-row">
+                    <td><a href="javascript:void(0);">NIPT MaterniT GENOME (via Innermost)</a></td>
+                    <td>Pregnancy</td>
+                    <td></td>
+                    <td>Y</td>
+                </tr>
+                <tr class="details">
+                    <td colspan="4">Highly comprehensive non-invasive prenatal test that screens for numerous genetic conditions. Essential for high-risk pregnancies requiring detailed genetic information.</td>
+                </tr>
+                <tr class="test-row">
+                    <td><a href="javascript:void(0);">Hormone (Luteinizing Hormone)</a></td>
+                    <td>Female Fertility</td>
+                    <td></td>
+                    <td>Y</td>
+                </tr>
+                <tr class="details">
+                    <td colspan="4">Measures luteinizing hormone (LH) levels to evaluate ovulation and reproductive health. Important for diagnosing fertility issues and managing reproductive health.</td>
+                </tr>
+                <tr class="test-row">
+                    <td><a href="javascript:void(0);">Venous Blood Test</a></td>
+                    <td>General</td>
+                    <td>Y</td>
+                    <td>Y</td>
+                </tr>
+                <tr class="details">
+                    <td colspan="4">Basic blood draw for various tests. Essential for obtaining blood samples for diagnostic purposes.</td>
+                </tr>
+                <tr class="test-row">
+                    <td><a href="javascript:void(0);">Blood Group Test</a></td>
+                    <td>General Health/Biochemistry</td>
+                    <td>Y</td>
+                    <td>Y</td>
+                </tr>
+                <tr class="details">
+                    <td colspan="4">Determines blood group and Rh factor. Important for blood transfusions, pregnancy, and various medical conditions.</td>
+                </tr>
+                <tr class="test-row">
+                    <td><a href="javascript:void(0);">Full Blood Count Test</a></td>
+                    <td>General Health/Biochemistry</td>
+                    <td>Y</td>
+                    <td>Y</td>
+                </tr>
+                <tr class="details">
+                    <td colspan="4">Measures various components of blood, including red and white blood cells, hemoglobin, and platelets. Essential for diagnosing a wide range of conditions.</td>
+                </tr>
+                <tr class="test-row">
+                    <td><a href="javascript:void(0);">Vitamin D Check</a></td>
+                    <td>General Health/Biochemistry</td>
+                    <td>Y</td>
+                    <td>Y</td>
+                </tr>
+                <tr class="details">
+                    <td colspan="4">Measures vitamin D levels to assess deficiency and manage bone health and immune function.</td>
+                </tr>
+                <tr class="test-row">
+                    <td><a href="javascript:void(0);">GBS</a></td>
+                    <td>Pregnancy</td>
+                    <td></td>
+                    <td>Y</td>
+                </tr>
+                <tr class="details">
+                    <td colspan="4">Tests for Group B Streptococcus (GBS) infection, which can affect newborns. Important for pregnant women to ensure a healthy pregnancy and delivery.</td>
+                </tr>
+                <tr class="test-row">
+                    <td><a href="javascript:void(0);">Gender Blood Test</a></td>
+                    <td>Pregnancy</td>
+                    <td></td>
+                    <td>Y</td>
+                </tr>
+                <tr class="details">
+                    <td colspan="4">Determines the gender of the fetus early in pregnancy. Provides parents with early information about their baby's gender.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const checkboxes = document.querySelectorAll('.filters input[type="checkbox"]');
+            const searchInput = document.getElementById('search');
+            const table = document.getElementById('bloodTestsTable').getElementsByTagName('tbody')[0];
+
+            // Event listener for search bar
+            searchInput.addEventListener('input', function() {
+                filterTable();
+            });
+
+            // Event listeners for checkboxes
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    filterTable();
+                });
+            });
+
+            // Function to filter table
+            function filterTable() {
+                const searchText = searchInput.value.toLowerCase();
+                const checkedCategories = Array.from(checkboxes).filter(checkbox => checkbox.checked).map(checkbox => checkbox.value);
+                
+                Array.from(table.rows).forEach((row, index) => {
+                    if (index % 2 === 0) {
+                        const testName = row.cells[0].textContent.toLowerCase();
+                        const category = row.cells[1].textContent;
+                        const detailRow = table.rows[index + 1];
+                        
+                        const matchesSearch = searchText === '' || testName.includes(searchText) || detailRow.textContent.toLowerCase().includes(searchText);
+                        const matchesCategory = checkedCategories.length === 0 || checkedCategories.includes(category);
+                        
+                        if (matchesSearch && matchesCategory) {
+                            row.style.display = '';
+                            detailRow.style.display = '';
+                        } else {
+                            row.style.display = 'none';
+                            detailRow.style.display = 'none';
+                        }
+                    }
+                });
+            }
+
+            // Function to sort table
+            function sortTable(n) {
+                const rows = table.rows;
+                let switching = true;
+                let shouldSwitch, switchcount = 0;
+                let dir = 'asc';
+
+                while (switching) {
+                    switching = false;
+                    for (let i = 0; i < rows.length - 2; i += 2) {
+                        shouldSwitch = false;
+                        const x = rows[i].getElementsByTagName('td')[n];
+                        const y = rows[i + 2].getElementsByTagName('td')[n];
+                        
+                        if (dir === 'asc' ? x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase() : x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                            shouldSwitch = true;
+                            break;
+                        }
+                    }
+                    if (shouldSwitch) {
+                        rows[i].parentNode.insertBefore(rows[i + 2], rows[i]);
+                        rows[i + 1].parentNode.insertBefore(rows[i + 3], rows[i + 1]);
+                        switching = true;
+                        switchcount++;
+                    } else if (switchcount === 0 && dir === 'asc') {
+                        dir = 'desc';
+                        switching = true;
+                    }
+                }
+            }
+
+            // Event listener for expanding/collapsing details
+            document.querySelectorAll('#bloodTestsTable tbody tr.test-row').forEach(row => {
+                row.addEventListener('click', function() {
+                    const nextRow = this.nextElementSibling;
+                    if (nextRow && nextRow.classList.contains('details')) {
+                        nextRow.classList.toggle('show');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
