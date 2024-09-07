@@ -135,9 +135,6 @@
         <div class="search-bar">
             <input type="text" id="search" placeholder="Search for specific markers or tests...">
         </div>
-        <div class="search-bar">
-            <input type="text" id="biomarkerSearch" placeholder="Search for biomarkers...">
-        </div>
         <table id="bloodTestsTable">
             <thead>
                 <tr>
@@ -577,16 +574,10 @@
             const sexCheckboxes = document.querySelectorAll('.sex-filter');
             const categoryCheckboxes = document.querySelectorAll('.filters input[type="checkbox"]:not(.sex-filter)');
             const searchInput = document.getElementById('search');
-            const biomarkerSearch = document.getElementById('biomarkerSearch');
             const table = document.getElementById('bloodTestsTable').getElementsByTagName('tbody')[0];
 
             // Event listener for search bar
             searchInput.addEventListener('input', function() {
-                filterTable();
-            });
-
-            // Event listener for biomarker search
-            biomarkerSearch.addEventListener('input', function() {
                 filterTable();
             });
 
@@ -605,7 +596,6 @@
             // Function to filter table
             function filterTable() {
                 const searchText = searchInput.value.toLowerCase();
-                const biomarkerText = biomarkerSearch.value.toLowerCase();
                 const checkedSexes = Array.from(sexCheckboxes).filter(checkbox => checkbox.checked).map(checkbox => checkbox.value);
                 const checkedCategories = Array.from(categoryCheckboxes).filter(checkbox => checkbox.checked).map(checkbox => checkbox.value);
                 
@@ -618,7 +608,7 @@
                         const detailRow = table.rows[index + 1];
                         
                         const matchesSearch = searchText === '' || testName.includes(searchText) || detailRow.textContent.toLowerCase().includes(searchText);
-                        const matchesBiomarker = biomarkerText === '' || biomarkers.includes(biomarkerText);
+                        const matchesBiomarker = searchText === '' || biomarkers.includes(searchText);
                         const matchesCategory = checkedCategories.length === 0 || checkedCategories.includes(category);
                         const matchesSex = checkedSexes.length === 0 || checkedSexes.includes(sex);
                         
