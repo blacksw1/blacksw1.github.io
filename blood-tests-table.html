@@ -614,7 +614,7 @@
                         const testName = row.cells[0].textContent.toLowerCase();
                         const category = row.cells[1].textContent;
                         const sex = row.cells[2].textContent;
-                        const biomarkers = row.cells[4].textContent.toLowerCase();
+                        const biomarkers = row.cells[3].textContent.toLowerCase();
                         const detailRow = table.rows[index + 1];
                         
                         const matchesSearch = searchText === '' || testName.includes(searchText) || detailRow.textContent.toLowerCase().includes(searchText);
