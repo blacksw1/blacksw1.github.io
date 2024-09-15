@@ -602,20 +602,18 @@
             const checkedProfiles = Array.from(profileCheckboxes).filter(checkbox => checkbox.checked).map(checkbox => checkbox.value);
             
             Array.from(table.rows).forEach((row, index) => {
-                if (index % 2 === 0) {
-                    const biomarkerName = row.cells[0].textContent.toLowerCase();
-                    const profile = row.cells[1].textContent.toLowerCase();
-                    
-                    const matchesSearch = searchText === '' || biomarkerName.includes(searchText);
-                    const matchesProfile = checkedProfiles.length === 0 || checkedProfiles.includes(sex);
-                    
-                    if (matchesSearch && matchesProfile) {
-                        row.style.display = '';
-                        detailRow.style.display = '';
-                    } else {
-                        row.style.display = 'none';
-                        detailRow.style.display = 'none';
-                    }
+                const biomarkerName = row.cells[0].textContent.toLowerCase();
+                const profile = row.cells[1].textContent.toLowerCase();
+                
+                const matchesSearch = searchText === '' || biomarkerName.includes(searchText);
+                const matchesProfile = checkedProfiles.length === 0 || checkedProfiles.includes(sex);
+                
+                if (matchesSearch && matchesProfile) {
+                    row.style.display = '';
+                    detailRow.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                    detailRow.style.display = 'none';
                 }
             });
         }
