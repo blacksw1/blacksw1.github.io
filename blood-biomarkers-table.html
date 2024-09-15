@@ -607,7 +607,7 @@
                     const profile = row.cells[1].textContent.toLowerCase();
                     
                     const matchesSearch = searchText === '' || biomarkerName.includes(searchText);
-                    const matchesProfile = checkedProfiles.length === 0 || checkedSexes.includes(sex);
+                    const matchesProfile = checkedProfiles.length === 0 || checkedProfiles.includes(sex);
                     
                     if (matchesSearch && matchesProfile) {
                         row.style.display = '';
