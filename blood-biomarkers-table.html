@@ -603,18 +603,16 @@
             
             Array.from(table.rows).forEach((row, index) => {
                 const biomarkerName = row.cells[0].textContent.toLowerCase();
-                const profile = row.cells[1].textContent.toLowerCase();
+                const profile = row.cells[1].textContent;
                 
                 const matchesSearch = searchText === '' || biomarkerName.includes(searchText);
                 const matchesProfile = checkedProfiles.length === 0 || checkedProfiles.includes(profile);
                 
-                
+
                 if (matchesSearch && matchesProfile) {
                     row.style.display = '';
-                    detailRow.style.display = '';
                 } else {
                     row.style.display = 'none';
-                    detailRow.style.display = 'none';
                 }
             });
         }
