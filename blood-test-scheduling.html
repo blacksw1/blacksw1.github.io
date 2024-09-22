@@ -122,7 +122,7 @@
         // Function to handle the logic
         function handleSchedulingEmbed() {
             const urlParams = new URLSearchParams(window.location.search);
-            let appointmentType = urlParams.get(""); // Get the number after the ?
+            let appointmentType = urlParams.get("appointmentType"); // Get the number after the ?
             console.log(`urlParams:${urlParams}`)
             console.log(`appointmentType:${appointmentType}`)
 
