@@ -4,53 +4,95 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Blood Test Scheduling</title>
+    <style>
+        .testSelect {
+            padding: 8px 12px;
+            border: 1px solid #A28269;
+            border-radius: 4px;
+            background-color: #FFFFFF;
+            color: #634A33;
+            cursor: pointer;
+        }
+
+        .testSelect:focus,
+        .testSelect:hover {
+            outline: none;
+            border: 1px solid #634a33
+        }
+
+        .testSelect option {
+            background: #ffffff;
+        }
+
+        .test-select-container {
+            width: 60%;
+            margin-left: auto;
+            margin-right: auto;
+            text-align: center;
+            padding-top: 8px;
+            padding-bottom: 8px;
+            border: 1px solid #634A33;
+            border-radius: 4px;
+            background-color: #F1E8E2;
+        }
+
+        #embedArea {
+            padding-top: 10px;
+        }
+
+        .select-box-label {
+            margin-right: 10px;
+        }
+    </style>
 </head>
 <body>
 
     <!-- Dropdown for selecting the blood test name -->
-    <label for="bloodTest">Select a Blood Test:</label>
-    <select id="bloodTest">
-        <option value="">Select a test</option>
-        <option value="Anti-Mullerian Hormone">Anti-Mullerian Hormone</option>
-        <option value="Beta HCG">Beta HCG</option>
-        <option value="Bone Screen">Bone Screen</option>
-        <option value="Diabetes (HbA1c)">Diabetes (HbA1c)</option>
-        <option value="Follicle Stimulating Hormone">Follicle Stimulating Hormone</option>
-        <option value="Full Blood Count">Full Blood Count</option>
-        <option value="Liver Function">Liver Function</option>
-        <option value="Luteinizing Hormone">Luteinizing Hormone</option>
-        <option value="Oestradiol">Oestradiol</option>
-        <option value="Progesterone">Progesterone</option>
-        <option value="Prolactin">Prolactin</option>
-        <option value="Thyroglobulin">Thyroglobulin</option>
-        <option value="Thyroid (Peroxidase Antibodies)">Thyroid (Peroxidase Antibodies)</option>
-        <option value="Thyroid Stimulating Hormone">Thyroid Stimulating Hormone</option>
-        <option value="Thyroid T3">Thyroid T3</option>
-        <option value="Thyroid T4">Thyroid T4</option>
-        <option value="Blood Group Test EDTA">Blood Group Test EDTA</option>
-        <option value="CA125">CA125</option>
-        <option value="PSA">PSA</option>
-        <option value="Urea & Electrolytes">Urea & Electrolytes</option>
-        <option value="Vitamin D">Vitamin D</option>
-        <option value="Kidney Function">Kidney Function</option>
-        <option value="Testosterone">Testosterone</option>
-        <option value="Lipids (Including Cholesterol, HDL, LDL)">Lipids (Including Cholesterol, HDL, LDL)</option>
-        <option value="SHBG">SHBG</option>
-        <option value="Thyroid Hormone Profile (All)">Thyroid Hormone Profile (All)</option>
-        <option value="Virology Profile">Virology Profile</option>
-        <option value="Fertility Standard">Fertility Standard</option>
-        <option value="Fertility Advanced">Fertility Advanced</option>
-        <option value="Perimenopausal Profile">Perimenopausal Profile</option>
-        <option value="PCOS">PCOS</option>
-        <option value="Cardiovascular Risk Profile 1">Cardiovascular Risk Profile 1</option>
-        <option value="General Well Person Profile">General Well Person Profile</option>
-        <option value="Well Man Profile">Well Man Profile</option>
-        <option value="Biochemistry and Haematology Profile">Biochemistry and Haematology Profile</option>
-        <option value="Sneakpeek Gender Test">Sneakpeek Gender Test</option>
-        <option value="NIPT Panorama Basic Panel">NIPT Panorama Basic Panel</option>
-        <option value="NIPT Panorama Extended Panel">NIPT Panorama Extended Panel</option>
-    </select>
-
+    <div class="test-select-container">
+        <label for="bloodTest" class="select-box-label">Select a Blood Test</label>
+        <select class="testSelect" id="bloodTest">
+            <option value="">Select a test</option>
+            <option value="Anti-Mullerian Hormone">Anti-Mullerian Hormone</option>
+            <option value="Beta HCG">Beta HCG</option>
+            <option value="Bone Screen">Bone Screen</option>
+            <option value="Diabetes (HbA1c)">Diabetes (HbA1c)</option>
+            <option value="Follicle Stimulating Hormone">Follicle Stimulating Hormone</option>
+            <option value="Full Blood Count">Full Blood Count</option>
+            <option value="Liver Function">Liver Function</option>
+            <option value="Luteinizing Hormone">Luteinizing Hormone</option>
+            <option value="Oestradiol">Oestradiol</option>
+            <option value="Progesterone">Progesterone</option>
+            <option value="Prolactin">Prolactin</option>
+            <option value="Thyroglobulin">Thyroglobulin</option>
+            <option value="Thyroid (Peroxidase Antibodies)">Thyroid (Peroxidase Antibodies)</option>
+            <option value="Thyroid Stimulating Hormone">Thyroid Stimulating Hormone</option>
+            <option value="Thyroid T3">Thyroid T3</option>
+            <option value="Thyroid T4">Thyroid T4</option>
+            <option value="Blood Group Test EDTA">Blood Group Test EDTA</option>
+            <option value="CA125">CA125</option>
+            <option value="PSA">PSA</option>
+            <option value="Urea & Electrolytes">Urea & Electrolytes</option>
+            <option value="Vitamin D">Vitamin D</option>
+            <option value="Kidney Function">Kidney Function</option>
+            <option value="Testosterone">Testosterone</option>
+            <option value="Lipids (Including Cholesterol, HDL, LDL)">Lipids (Including Cholesterol, HDL, LDL)</option>
+            <option value="SHBG">SHBG</option>
+            <option value="Thyroid Hormone Profile (All)">Thyroid Hormone Profile (All)</option>
+            <option value="Virology Profile">Virology Profile</option>
+            <option value="Fertility Standard">Fertility Standard</option>
+            <option value="Fertility Advanced">Fertility Advanced</option>
+            <option value="Perimenopausal Profile">Perimenopausal Profile</option>
+            <option value="PCOS">PCOS</option>
+            <option value="Cardiovascular Risk Profile 1">Cardiovascular Risk Profile 1</option>
+            <option value="General Well Person Profile">General Well Person Profile</option>
+            <option value="Well Man Profile">Well Man Profile</option>
+            <option value="Biochemistry and Haematology Profile">Biochemistry and Haematology Profile</option>
+            <option value="Sneakpeek Gender Test">Sneakpeek Gender Test</option>
+            <option value="NIPT Panorama Basic Panel">NIPT Panorama Basic Panel</option>
+            <option value="NIPT Panorama Extended Panel">NIPT Panorama Extended Panel</option>
+        </select>
+    </div>
+    <br>
     <div id="embedArea"></div>
 
     <script>
