@@ -113,15 +113,16 @@
 
             // Check if there is a number in the URL
             if (appointmentType) {
+                // Embed the iframe immediately if URL parameter is present
                 insertIframe(appointmentType);
             } else {
-                // If no number in the URL, get the selected blood test name from dropdown
+                // Add event listener for the dropdown selection
                 const bloodTestDropdown = document.getElementById('bloodTest');
                 bloodTestDropdown.addEventListener('change', function() {
                     const selectedTest = bloodTestDropdown.value;
                     if (selectedTest && bloodTests[selectedTest]) {
                         appointmentType = bloodTests[selectedTest];
-                        insertIframe(appointmentType);
+                        insertIframe(appointmentType); // Embed the iframe after selection
                     }
                 });
             }
