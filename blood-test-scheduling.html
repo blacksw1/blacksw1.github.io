@@ -123,6 +123,8 @@
         function handleSchedulingEmbed() {
             const urlParams = new URLSearchParams(window.location.search);
             let appointmentType = urlParams.get(""); // Get the number after the ?
+            console.log(`urlParams:${urlParams}`)
+            console.log(`appointmentType:${appointmentType}`)
 
             // Check if there is a number in the URL
             if (appointmentType) {
