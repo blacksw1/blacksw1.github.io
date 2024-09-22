@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Blood Test Scheduling</title>
     <style>
-        .testSelect {
+        .test-select {
             padding: 8px 12px;
             border: 1px solid #A28269;
             border-radius: 4px;
@@ -14,13 +14,13 @@
             cursor: pointer;
         }
 
-        .testSelect:focus,
-        .testSelect:hover {
+        .test-select:focus,
+        .test-select:hover {
             outline: none;
             border: 1px solid #634a33
         }
 
-        .testSelect option {
+        .test-select option {
             background: #ffffff;
         }
 
@@ -43,14 +43,35 @@
         .select-box-label {
             margin-right: 10px;
         }
+
+        @media (max-width: 768px) {
+            .test-select-container {
+                width: 80%;
+            }
+        }
+
+        @media (max-width: 550px) {
+            .test-select-container {
+                width: 100%;
+            }
+            .test-select {
+                font-size: 17px;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .test-select {
+                font-size: 15px;
+            }
+        }
     </style>
 </head>
 <body>
 
     <!-- Dropdown for selecting the blood test name -->
     <div class="test-select-container">
-        <label for="bloodTest" class="select-box-label">Select a Blood Test</label>
-        <select class="testSelect" id="bloodTest">
+        <label for="bloodTest" class="select-box-label" id="select-box-label">Select a Blood Test</label>
+        <select class="test-select" id="bloodTest">
             <option value="">Select a test</option>
             <option value="Anti-Mullerian Hormone">Anti-Mullerian Hormone</option>
             <option value="Beta HCG">Beta HCG</option>
@@ -138,6 +159,15 @@
             "NIPT Panorama Extended Panel": 68793168
         };
 
+        function getKeyByValue(object, value) {
+            return Object.keys(object).find(key => object[key] === value);
+        }
+
+        function selectElement(id, valueToSelect) {    
+            let element = document.getElementById(id);
+            element.value = valueToSelect;
+        }
+
         // Function to insert the iframe
         function insertIframe(appointmentType) {
             const embedArea = document.getElementById('embedArea');
@@ -165,24 +195,26 @@
         function handleSchedulingEmbed() {
             const urlParams = new URLSearchParams(window.location.search);
             let appointmentType = urlParams.get("appointmentType"); // Get the number after the ?
-            console.log(`urlParams:${urlParams}`)
-            console.log(`appointmentType:${appointmentType}`)
 
             // Check if there is a number in the URL
-            if (appointmentType) {
-                // Embed the iframe immediately if URL parameter is present
-                insertIframe(appointmentType);
-            } else {
-                // Add event listener for the dropdown selection
-                const bloodTestDropdown = document.getElementById('bloodTest');
-                bloodTestDropdown.addEventListener('change', function() {
-                    const selectedTest = bloodTestDropdown.value;
-                    if (selectedTest && bloodTests[selectedTest]) {
-                        appointmentType = bloodTests[selectedTest];
-                        insertIframe(appointmentType); // Embed the iframe after selection
-                    }
-                });
-            }
+            // if (appointmentType) {
+            //     document.getElementById("select-box-label").innerText = "If scheduler fails to load after a few seconds, please select test here: "
+            //     // Embed the iframe immediately if URL parameter is present
+            //     insertIframe(appointmentType);
+            // }
+            // Add event listener for the dropdown selection
+            const bloodTestDropdown = document.getElementById('bloodTest');
+            bloodTestDropdown.addEventListener('change', function() {
+                const selectedTest = bloodTestDropdown.value;
+                if (selectedTest && bloodTests[selectedTest]) {
+                    appointmentType = bloodTests[selectedTest];
+                    insertIframe(appointmentType); // Embed the iframe after selection
+                }
+            });
+
+            const selectOption = getKeyByValue(bloodTests,parseInt(appointmentType));
+            selectElement("bloodTest",selectOption);
+            insertIframe(appointmentType);
         }
 
         // Run the function on page load
