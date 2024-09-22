@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blood Test Scheduling</title>
+</head>
+<body>
+
+    <!-- Dropdown for selecting the blood test name -->
+    <label for="bloodTest">Select a Blood Test:</label>
+    <select id="bloodTest">
+        <option value="">Select a test</option>
+        <option value="Anti-Mullerian Hormone">Anti-Mullerian Hormone</option>
+        <option value="Beta HCG">Beta HCG</option>
+        <option value="Bone Screen">Bone Screen</option>
+        <option value="Diabetes (HbA1c)">Diabetes (HbA1c)</option>
+        <option value="Follicle Stimulating Hormone">Follicle Stimulating Hormone</option>
+        <option value="Full Blood Count">Full Blood Count</option>
+        <option value="Liver Function">Liver Function</option>
+        <option value="Luteinizing Hormone">Luteinizing Hormone</option>
+        <option value="Oestradiol">Oestradiol</option>
+        <option value="Progesterone">Progesterone</option>
+        <option value="Prolactin">Prolactin</option>
+        <option value="Thyroglobulin">Thyroglobulin</option>
+        <option value="Thyroid (Peroxidase Antibodies)">Thyroid (Peroxidase Antibodies)</option>
+        <option value="Thyroid Stimulating Hormone">Thyroid Stimulating Hormone</option>
+        <option value="Thyroid T3">Thyroid T3</option>
+        <option value="Thyroid T4">Thyroid T4</option>
+        <option value="Blood Group Test EDTA">Blood Group Test EDTA</option>
+        <option value="CA125">CA125</option>
+        <option value="PSA">PSA</option>
+        <option value="Urea & Electrolytes">Urea & Electrolytes</option>
+        <option value="Vitamin D">Vitamin D</option>
+        <option value="Kidney Function">Kidney Function</option>
+        <option value="Testosterone">Testosterone</option>
+        <option value="Lipids (Including Cholesterol, HDL, LDL)">Lipids (Including Cholesterol, HDL, LDL)</option>
+        <option value="SHBG">SHBG</option>
+        <option value="Thyroid Hormone Profile (All)">Thyroid Hormone Profile (All)</option>
+        <option value="Virology Profile">Virology Profile</option>
+        <option value="Fertility Standard">Fertility Standard</option>
+        <option value="Fertility Advanced">Fertility Advanced</option>
+        <option value="Perimenopausal Profile">Perimenopausal Profile</option>
+        <option value="PCOS">PCOS</option>
+        <option value="Cardiovascular Risk Profile 1">Cardiovascular Risk Profile 1</option>
+        <option value="General Well Person Profile">General Well Person Profile</option>
+        <option value="Well Man Profile">Well Man Profile</option>
+        <option value="Biochemistry and Haematology Profile">Biochemistry and Haematology Profile</option>
+        <option value="Sneakpeek Gender Test">Sneakpeek Gender Test</option>
+        <option value="NIPT Panorama Basic Panel">NIPT Panorama Basic Panel</option>
+        <option value="NIPT Panorama Extended Panel">NIPT Panorama Extended Panel</option>
+    </select>
+
+    <div id="embedArea"></div>
+
+    <script>
+        // Blood tests object with the test names as keys and the numbers as values
+        const bloodTests = {
+            "Anti-Mullerian Hormone": 68304572,
+            "Beta HCG": 68304636,
+            "Bone Screen": 68304773,
+            "Diabetes (HbA1c)": 68304801,
+            "Follicle Stimulating Hormone": 68304822,
+            "Full Blood Count": 68304834,
+            "Liver Function": 68304846,
+            "Luteinizing Hormone": 68305056,
+            "Oestradiol": 68305084,
+            "Progesterone": 68305106,
+            "Prolactin": 68305129,
+            "Thyroglobulin": 68305145,
+            "Thyroid (Peroxidase Antibodies)": 68305166,
+            "Thyroid Stimulating Hormone": 68305180,
+            "Thyroid T3": 68305214,
+            "Thyroid T4": 68305235,
+            "Blood Group Test EDTA": 68305280,
+            "CA125": 68306363,
+            "PSA": 68306378,
+            "Urea & Electrolytes": 68306396,
+            "Vitamin D": 68306442,
+            "Kidney Function": 68306458,
+            "Testosterone": 68306486,
+            "Lipids (Including Cholesterol, HDL, LDL)": 68306516,
+            "SHBG": 68306528,
+            "Thyroid Hormone Profile (All)": 68306584,
+            "Virology Profile": 68306613,
+            "Fertility Standard": 68306638,
+            "Fertility Advanced": 68306658,
+            "Perimenopausal Profile": 68306679,
+            "PCOS": 68306720,
+            "Cardiovascular Risk Profile 1": 68306830,
+            "General Well Person Profile": 68306892,
+            "Well Man Profile": 68306914,
+            "Biochemistry and Haematology Profile": 68306954,
+            "Sneakpeek Gender Test": 68793139,
+            "NIPT Panorama Basic Panel": 68793158,
+            "NIPT Panorama Extended Panel": 68793168
+        };
+
+        // Function to insert the iframe
+        function insertIframe(appointmentType) {
+            const embedArea = document.getElementById('embedArea');
+            const iframe = `
+                <iframe src="https://app.acuityscheduling.com/schedule.php?owner=26891174&appointmentType=${appointmentType}&ref=embedded_csp" title="Schedule Appointment" width="100%" height="800" frameBorder="0"></iframe>
+                <script src="https://embed.acuityscheduling.com/js/embed.js" type="text/javascript"></script>
+            `;
+            embedArea.innerHTML = iframe; // Inject the iframe into the div
+        }
+
+        // Function to handle the logic
+        function handleSchedulingEmbed() {
+            const urlParams = new URLSearchParams(window.location.search);
+            let appointmentType = urlParams.get(""); // Get the number after the ?
+
+            // Check if there is a number in the URL
+            if (appointmentType) {
+                insertIframe(appointmentType);
+            } else {
+                // If no number in the URL, get the selected blood test name from dropdown
+                const bloodTestDropdown = document.getElementById('bloodTest');
+                bloodTestDropdown.addEventListener('change', function() {
+                    const selectedTest = bloodTestDropdown.value;
+                    if (selectedTest && bloodTests[selectedTest]) {
+                        appointmentType = bloodTests[selectedTest];
+                        insertIframe(appointmentType);
+                    }
+                });
+            }
+        }
+
+        // Run the function on page load
+        window.onload = handleSchedulingEmbed;
+
+    </script>
+
+</body>
+</html>
